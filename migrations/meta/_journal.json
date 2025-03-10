@@ -8,6 +8,20 @@
       "when": 1740768698827,
       "tag": "0000_fast_wiccan",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1741530429259,
+      "tag": "0001_clammy_bulldozer",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1741607711706,
+      "tag": "0002_groovy_randall",
+      "breakpoints": true
     }
   ]
 }
