@@ -12,6 +12,18 @@ interface Book {
   summary: string
   createdAt: Date | null
 }
+interface User {
+  id: string
+  fullName: string
+  email: string
+  universityId: number
+  password: string
+  universityCard: string
+  status: "APPROVED" | "PENDING" | "REJECTED" | null
+  role: "ADMIN" | "USER" | null
+  lastActivityDate: string | null
+  createdAt: Date | null
+}
 
 interface AuthCredentials {
   fullName: string
