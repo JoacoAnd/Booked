@@ -11,7 +11,7 @@ const UserCard = ({
   user: User;
 }) => {
   return (
-    <div className="bg-gradient-to-b rounded-xl p-8 from-[#232839] to-[#12141D] w-full">
+    <div className="bg-gradient-to-b rounded-xl p-8 from-[#232839] to-[#12141D] w-full h-fit">
       <div className="flex items-center gap-6 mb-8">
         <CircleUser className="size-24 text-white" />
         <div className="flex flex-col">
