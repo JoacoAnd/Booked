@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import React from "react";
+import React, { useState } from "react";
 import {
   DefaultValues,
   FieldValues,
@@ -40,6 +40,7 @@ const AuthForm = <T extends FieldValues>({
 }: Props<T>) => {
   const router = useRouter();
   const isSignIn = type === "SIGN_IN";
+  const [isLoading, setIsLoading] = useState(false);
 
   const form: UseFormReturn<T> = useForm({
     resolver: zodResolver(schema),
@@ -47,6 +48,7 @@ const AuthForm = <T extends FieldValues>({
   });
 
   const handleSubmit: SubmitHandler<T> = async (data) => {
+    setIsLoading(true);
     const result = await onSubmit(data);
     if (result.success) {
       toast.success("Success", {
@@ -61,6 +63,7 @@ const AuthForm = <T extends FieldValues>({
         description: result.error,
       });
     }
+    setIsLoading(false);
   };
   return (
     <div className="flex flex-col gap-4">
@@ -115,8 +118,14 @@ const AuthForm = <T extends FieldValues>({
             );
           })}
 
-          <Button type="submit" className="form-btn">
-            {isSignIn ? "Sign In" : "Sign Up"}
+          <Button disabled={isLoading} type="submit" className="form-btn">
+            {isSignIn
+              ? isLoading
+                ? "Signing in..."
+                : "Sign in"
+              : isLoading
+                ? "Signing up..."
+                : "Sign up"}
           </Button>
         </form>
         <p className="text-center text-base font-medium">

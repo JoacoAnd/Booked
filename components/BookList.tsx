@@ -24,8 +24,8 @@ const BookList = ({
       </ul>
       <ul className="grid place-items-center grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         {borrowedBooks &&
-          borrowedBooks.map((book) => (
-            <BorrowedCard key={book.title} {...book} />
+          borrowedBooks.map((book, i) => (
+            <BorrowedCard key={book.title + i} {...book} />
           ))}
       </ul>
     </section>

@@ -14,7 +14,7 @@ const Page = async () => {
     .where(eq(users.id, session?.user?.id as string))
     .limit(1);
 
-    const borrowedBooks = await db
+  const borrowedBooks = await db
     .select({
       id: books.id,
       title: books.title,
@@ -31,12 +31,18 @@ const Page = async () => {
     .innerJoin(books, eq(borrowRecords.bookId, books.id))
     .where(eq(borrowRecords.userId, user.id));
 
-    console.log(borrowedBooks);
-    
+  console.log(borrowedBooks);
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-[1fr_2fr] max-w-7xl mx-auto gap-8">
       <UserCard user={user} />
-      <BookList title="Borrowed books" borrowedBooks={borrowedBooks} />
+      {borrowedBooks.length > 0 ? (
+        <BookList title="Borrowed books" borrowedBooks={borrowedBooks} />
+      ) : (
+        <h2 className="font-bebas-neue text-4xl text-light-100">
+          No borrowed books
+        </h2>
+      )}
     </div>
   );
 };
