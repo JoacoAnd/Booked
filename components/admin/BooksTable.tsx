@@ -2,9 +2,8 @@
 import React from "react";
 
 import {
-  Table as TableComponent,
+  Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -16,8 +15,6 @@ import { redirect, useRouter } from "next/navigation";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
-  DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "../ui/dialog";
@@ -26,12 +23,13 @@ import { deleteBook } from "@/lib/admin/actions/book";
 import { toast } from "sonner";
 
 interface Props {
-  head: string[];
   data: Book[];
 }
 
-const Table = ({ data, head }: Props) => {
+const BooksTable = ({ data }: Props) => {
   const router = useRouter();
+  const head = ["Book Title", "Author", "Genre", "Date Created", "Actions"];
+
   const onDelete = async (id: string) => {
     const result = await deleteBook(id);
 
@@ -44,13 +42,12 @@ const Table = ({ data, head }: Props) => {
   };
 
   return (
-    <TableComponent>
+    <Table>
       <TableHeader className="bg-slate-50">
         <TableRow>
           {head.map((item) => (
             <TableHead key={item}>{item}</TableHead>
           ))}
-          <TableHead>Actions</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -66,50 +63,42 @@ const Table = ({ data, head }: Props) => {
             </TableCell>
             <TableCell>{item.author}</TableCell>
             <TableCell>{item.genre}</TableCell>
-            {item.createdAt && (
-              <TableCell>
-                {item.createdAt.toLocaleDateString("en-US", {
+            <TableCell>
+              {item.createdAt &&
+                item.createdAt.toLocaleDateString("en-US", {
                   month: "short",
                   day: "2-digit",
                   year: "numeric",
                 })}
-              </TableCell>
-            )}
+            </TableCell>
             <TableCell className="flex justify-center items-center gap-2">
-              <button
+              <Edit
                 onClick={() => redirect(`/admin/books/edit/${item.id}`)}
                 className="text-blue-100 cursor-pointer"
-              >
-                <Edit size={24} />
-              </button>
+                size={24}
+              />
               <Dialog>
                 <DialogTrigger>
-                  <button className="text-red-400 cursor-pointer">
-                    <Trash2 size={24} />
-                  </button>
+                  <Trash2 className="text-red-400 cursor-pointer" size={24} />
                 </DialogTrigger>
                 <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Are you absolutely sure?</DialogTitle>
-                    <DialogDescription>
-                      This action cannot be undone. This will permanently delete
-                      your account and remove your data from our servers.
-                    </DialogDescription>
-                    <Button
-                      variant="destructive"
-                      onClick={() => onDelete(item.id)}
-                    >
-                      Delete
-                    </Button>
-                  </DialogHeader>
+                  <DialogTitle className="text-center">
+                    Are you sure you want to delete this book?
+                  </DialogTitle>
+                  <Button
+                    variant="destructive"
+                    onClick={() => onDelete(item.id)}
+                  >
+                    Delete
+                  </Button>
                 </DialogContent>
               </Dialog>
             </TableCell>
           </TableRow>
         ))}
       </TableBody>
-    </TableComponent>
+    </Table>
   );
 };
 
-export default Table;
+export default BooksTable;

@@ -1,14 +1,14 @@
 import Container from "@/components/admin/Container";
-import Table from "@/components/admin/Table";
+import BooksTable from "@/components/admin/BooksTable";
 import { Button } from "@/components/ui/button";
-import { db } from "@/database/drizzle";
-import { books } from "@/database/schema";
 
 import Link from "next/link";
 import React from "react";
+import { db } from "@/database/drizzle";
+import { books } from "@/database/schema";
 
 const Page = async () => {
-  const bookList = (await db
+  const data = (await db
     .select()
     .from(books)
     .orderBy(books.createdAt)) as Book[];
@@ -25,10 +25,7 @@ const Page = async () => {
           </Link>
         </Button>
       </div>
-      <Table
-        head={["Book Title", "Author", "Genre", "Date Created"]}
-        data={bookList}
-      />
+      <BooksTable data={data} />
     </Container>
   );
 };
