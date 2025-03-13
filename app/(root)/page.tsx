@@ -14,8 +14,6 @@ const Home = async () => {
     .from(books)
     .limit(10)
     .orderBy(books.createdAt)) as Book[];
-  const result = await db.select().from(users);
-  console.log(JSON.stringify(result));
 
   return (
     <>
