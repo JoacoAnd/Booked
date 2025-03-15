@@ -2,7 +2,13 @@
 
 import config from "@/config";
 import { IKImage } from "imagekitio-next";
-import { BadgeCheck, BadgeX, CircleCheck, CircleUser } from "lucide-react";
+import {
+  BadgeCheck,
+  BadgeX,
+  CircleCheck,
+  CircleUser,
+  Hourglass,
+} from "lucide-react";
 import React from "react";
 
 const UserCard = ({
@@ -21,9 +27,14 @@ const UserCard = ({
                 <BadgeCheck className="w-3 h-3 text-yellow-200" />
                 Verified student
               </>
-            ) : (
+            ) : status === "REJECTED" ? (
               <>
                 <BadgeX className="w-3 h-3 text-red-600" />
+                Rejected account
+              </>
+            ) : (
+              <>
+                <Hourglass className="w-3 h-3 text-yellow-600" />
                 Pending approval
               </>
             )}

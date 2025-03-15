@@ -38,3 +38,17 @@ export const updateUserRole = async (userId: string, role: "ADMIN" | "USER") => 
     return { success: false, message: "Failed to update user role" };
   }
 };
+
+export const updateUserStatus = async (id: string, status: "APPROVED" | "REJECTED") => {
+  try {
+    await db
+      .update(users)
+      .set({ status })
+      .where(eq(users.id, id))
+
+      return { success: true };
+  } catch (error) {
+    console.error("Error updating user status:", error);
+    return { success: false, message: "Failed to update user status" };
+  }
+};

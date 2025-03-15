@@ -56,7 +56,7 @@ export default {
         },
         primary: {
           DEFAULT: "#E7C9A5",
-          admin: "#25388C",
+          admin: "#3E8E9A",
         },
         green: {
           DEFAULT: "#027A48",
