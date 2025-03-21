@@ -2,13 +2,30 @@
 
 import { db } from "@/database/drizzle";
 import { books, borrowRecords } from "@/database/schema";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import dayjs from "dayjs";
 
 export const borrowBook = async (params: BorrowBookParams) => {
   const { userId, bookId } = params;
 
   try {
+    // Verificar si el usuario ya tiene el libro en préstamo
+    const existingBorrow = await db
+      .select()
+      .from(borrowRecords)
+      .where(
+        and(eq(borrowRecords.userId, userId), eq(borrowRecords.bookId, bookId), eq(borrowRecords.status, "BORROWED"))
+      )
+      .limit(1);
+
+    if (existingBorrow.length > 0) {
+      return {
+        success: false,
+        error: "You already have this book borrowed.",
+      };
+    }
+
+    // Verificar si hay copias disponibles
     const book = await db
       .select({ availableCopies: books.availableCopies })
       .from(books)

@@ -1,8 +1,9 @@
 "use server";
 
 import { db } from "@/database/drizzle";
-import { users } from "@/database/schema";
+import { books, borrowRecords, users } from "@/database/schema";
 import { eq } from "drizzle-orm";
+import dayjs from "dayjs";
 
 export const deleteUser = async (id: string) => {
   try {
@@ -50,5 +51,48 @@ export const updateUserStatus = async (id: string, status: "APPROVED" | "REJECTE
   } catch (error) {
     console.error("Error updating user status:", error);
     return { success: false, message: "Failed to update user status" };
+  }
+};
+
+export const updateBorrowedBookStatus = async (id: string, status: "BORROWED" | "RETURNED") => {
+  try {
+    const borrowRecord = await db
+    .select({ bookId: borrowRecords.bookId })
+    .from(borrowRecords)
+    .where(eq(borrowRecords.id, id))
+    .limit(1);
+
+  if (!borrowRecord.length) {
+    return { success: false, message: "Borrow record not found" };
+  }
+
+  const bookId = borrowRecord[0].bookId;
+
+    const updateData = {
+      status,
+      returnDate: status === "RETURNED" ? dayjs().format('YYYY-MM-DD') : null,
+    };
+    await db
+      .update(borrowRecords)
+      .set(updateData)
+      .where(eq(borrowRecords.id, id))
+
+      if (status === "RETURNED") {
+        const book = await db
+        .select({ availableCopies: books.availableCopies })
+        .from(books)
+        .where(eq(books.id, bookId))
+        .limit(1);
+
+        await db
+          .update(books)
+          .set({ availableCopies: book[0].availableCopies + 1 })
+          .where(eq(books.id, bookId));
+      }
+
+      return { success: true };
+  } catch (error) {
+    console.error("Error updating status:", error);
+    return { success: false, message: "Failed to update status" };
   }
 };

@@ -4,8 +4,8 @@ import { Button } from "./ui/button";
 import BookCover from "./BookCover";
 import BorrowBook from "./BorrowBook";
 import { db } from "@/database/drizzle";
-import { users } from "@/database/schema";
-import { eq } from "drizzle-orm";
+import { borrowRecords, users } from "@/database/schema";
+import { and, eq } from "drizzle-orm";
 
 interface Props extends Book {
   userId: string;
@@ -28,6 +28,18 @@ const BookOverview = async ({
     .select()
     .from(users)
     .where(eq(users.id, userId))
+    .limit(1);
+
+  const existingBorrow = await db
+    .select()
+    .from(borrowRecords)
+    .where(
+      and(
+        eq(borrowRecords.userId, userId),
+        eq(borrowRecords.bookId, id),
+        eq(borrowRecords.status, "BORROWED")
+      )
+    )
     .limit(1);
 
   const borrowingEligibility = {
@@ -67,6 +79,7 @@ const BookOverview = async ({
         <p className="book-description">{description}</p>
         {user && (
           <BorrowBook
+            existingBorrow={existingBorrow.length > 0}
             bookId={id}
             userId={userId}
             borrowingEligibility={borrowingEligibility}

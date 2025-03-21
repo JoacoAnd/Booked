@@ -15,7 +15,7 @@ const Page = async () => {
 
   return (
     <Container className="space-y-4">
-      <h2 className="text-xl font-semibold">All users</h2>
+      <h2 className="text-xl font-semibold">Account Registration Requests</h2>
       <AccountReqTable data={data} />
     </Container>
   );

@@ -14,12 +14,14 @@ interface Props {
     isEligible: boolean;
     message: string;
   };
+  existingBorrow: boolean;
 }
 
 const BorrowBook = ({
   userId,
   bookId,
   borrowingEligibility: { isEligible, message },
+  existingBorrow,
 }: Props) => {
   const router = useRouter();
   const [borrowing, setBorrowing] = useState(false);
@@ -49,11 +51,15 @@ const BorrowBook = ({
     <Button
       className="book-overview_btn"
       onClick={handleBorrow}
-      disabled={borrowing}
+      disabled={borrowing || existingBorrow}
     >
       <Image src="/icons/book.svg" alt="book" width={20} height={20} />
       <p className="font-bebas-neue text-xl text-dark-100">
-        {borrowing ? "Borrowing..." : "Borrow book"}
+        {!existingBorrow
+          ? borrowing
+            ? "Borrowing..."
+            : "Borrow book"
+          : "Borrowed"}
       </p>
     </Button>
   );
